@@ -1,6 +1,6 @@
 // @ts-check
-import { test, expect } from '@playwright/test';
-import {LoginPage} from "../pages/LoginPage";
+import { test } from '@playwright/test';
+import { LoginPage } from "../pages/LoginPage";
 
 test.describe(`Login tests`, () => {
 
@@ -11,10 +11,9 @@ test.describe(`Login tests`, () => {
   test(`User logs in @smoke`, async ({page}) => {
     const loginPage = new LoginPage(page);
     await loginPage.enterEmail("oleg@testpro.io")
-    await loginPage.enterPassword("R4Swbxexv$yqQ9W1")
+    await loginPage.enterPassword("R4Swbxexv$yqQ9W")
     await loginPage.clickLogIn()
 
-    // Expect a title "to contain" a substring.
-    await expect(page).toHaveTitle(/Koel/);
+    await loginPage.expectUserIsLoggedIn()
   });
 });

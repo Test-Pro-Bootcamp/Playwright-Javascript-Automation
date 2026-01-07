@@ -1,7 +1,7 @@
 // @ts-check
 import { test } from '@playwright/test';
-import {LoginPage} from "../pages/LoginPage";
-import {MainPage} from "../pages/MainPage";
+import { LoginPage } from "../pages/LoginPage";
+import { MainPage } from "../pages/MainPage";
 
 test.describe(`Playlist tests`, () => {
 
@@ -23,6 +23,8 @@ test.describe(`Playlist tests`, () => {
         await mainPage.selectCreateNewPlaylist()
 
         await mainPage.enterPlayListName(playlistName)
+
+        await mainPage.expectPlaylistExists(playlistName)
     });
 
     test('Add song to Playlist @regress', async ({page}) => {
@@ -31,9 +33,13 @@ test.describe(`Playlist tests`, () => {
 
         await loginPage.logIn("oleg@testpro.io", "R4Swbxexv$yqQ9W")
 
+        await page.waitForLoadState('networkidle');
         await mainPage.clickSongs();
 
         await mainPage.addSongToPlaylist()
-        await page.waitForTimeout(5000)
+
+        await mainPage.expectSuccessToast(
+            `Added 1 song into "${playlistName}."`
+        );
     });
 });
