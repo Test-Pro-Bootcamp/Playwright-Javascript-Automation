@@ -12,7 +12,6 @@ export default defineConfig({
 
   use: {
     baseURL: 'https://qa.koel.app',
-    headless: false,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'on-first-retry',
