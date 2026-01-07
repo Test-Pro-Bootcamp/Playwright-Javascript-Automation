@@ -1,12 +1,14 @@
 const { test, expect } = require('@playwright/test');
-const { AuthAPI } = require('./../../api/auth-api');
+const { AuthenticationAPI } = require('../../api/AuthenticationAPI');
 
-test('POST /api/me — successful login', async ({ request }) => {
-    const authAPI = new AuthAPI(request);
+test('User logs in', async ({ request }) => {
+    const authenticationAPI = new AuthenticationAPI(request);
 
-    const body = await authAPI.login('oleg@testpro.io', 'R4Swbxexv$yqQ9W');
+    const response = await authenticationAPI.login('oleg@testpro.io', 'R4Swbxexv$yqQ9W');
 
-    expect(body).toBeDefined();
+    expect(response.status()).toBe(200);
+
+    const body = await response.json();
     expect(body).toHaveProperty('token');
     expect(body.token).not.toBeNull();
 });

@@ -1,5 +1,5 @@
-// playlist-api.js
-export class PlaylistAPI {
+// PlaylistManagementAPI.js
+export class PlaylistManagementAPI {
     /**
      * @param {import('@playwright/test').APIRequestContext} request
      */
@@ -21,9 +21,7 @@ export class PlaylistAPI {
             data: { name, rules: [] },
         });
 
-        if (response.status() !== 200) throw new Error('Failed to create playlist');
-
-        return await response.json();
+        return response;
     }
 
     async syncPlaylist(playlistId, songs = []) {
@@ -38,9 +36,7 @@ export class PlaylistAPI {
             data: { songs },
         });
 
-        if (response.status() !== 200) throw new Error('Failed to sync playlist');
-
-        return await response.json();
+        return response;
     }
 
     async deletePlaylist(playlistId) {
@@ -54,8 +50,6 @@ export class PlaylistAPI {
             },
         });
 
-        if (response.status() !== 200) throw new Error('Failed to delete playlist');
-
-        return await response.json();
+        return response;
     }
 }

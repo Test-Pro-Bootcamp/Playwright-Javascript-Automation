@@ -1,48 +1,52 @@
 import { test, expect } from '@playwright/test';
-import {PlaylistAPI} from "../../api/playlist-api";
-import {AuthAPI} from "../../api/auth-api";
+import { PlaylistManagementAPI } from "../../api/PlaylistManagementAPI";
+import { AuthenticationAPI } from "../../api/AuthenticationAPI";
 
-test.describe('Playlist API', () => {
+test.describe('Playlist management API', () => {
 
-    let playlistApi;
+    let playlistManagementAPI;
     let playlistId;
 
     test.beforeEach(async ({ request }) => {
-        playlistApi = new PlaylistAPI(request);
+        playlistManagementAPI = new PlaylistManagementAPI(request);
 
-        const authAPI = new AuthAPI(request);
-        const body = await authAPI.login('oleg@testpro.io', 'R4Swbxexv$yqQ9W');
-        playlistApi.token = body.token;
+        const authenticationAPI = new AuthenticationAPI(request);
+        const response = await authenticationAPI.login('oleg@testpro.io', 'R4Swbxexv$yqQ9W');
+        const body = await response.json();
+        playlistManagementAPI.token = body.token;
     });
 
-    test('POST /api/playlist — create playlist successfully', async ({ }) => {
-        const playlistName = `Sleepy Songs ${Date.now()}`;
-        const playlist = await playlistApi.createPlaylist(playlistName);
+    test('Create a new playlist', async ({ }) => {
+        const playlistName = `Playlist ${Date.now()}`;
+        const playlist = await playlistManagementAPI.createPlaylist(playlistName);
 
-        expect(playlist).toHaveProperty('id');
-        expect(typeof playlist.id).toBe('number');
-        expect(playlist).toMatchObject({
+        expect(playlist.status()).toBe(200);
+        const body = await playlist.json();
+
+        expect(body).toHaveProperty('id');
+        expect(typeof body.id).toBe('number');
+        expect(body).toMatchObject({
             name: playlistName,
             rules: [],
             is_smart: false,
         });
 
-        playlistId = playlist.id;
+        playlistId = body.id;
     });
 
-    test('PUT /api/playlist/{id}/sync - add a song to a playlist', async ({ }) => {
-        const playlist = await playlistApi.createPlaylist(`Temp Playlist ${Date.now()}`);
-        playlistId = playlist.id;
+    test('Replace a playlist\'s content', async ({ }) => {
+        const result = await playlistManagementAPI.syncPlaylist(playlistId, ['06cd19b77127f1e7f889ecad54376b30']);
 
-        const result = await playlistApi.syncPlaylist(playlistId, ['06cd19b77127f1e7f889ecad54376b30']);
-        expect(result).toEqual([]);
+        expect(result.status()).toBe(200);
+        const body = await result.json();
+        expect(body).toEqual([]);
     });
 
-    test('DELETE /api/playlist/{id} - delete playlist', async ({ }) => {
-        const playlist = await playlistApi.createPlaylist(`Temp Playlist ${Date.now()}`);
-        playlistId = playlist.id;
+    test('Delete a playlist', async ({ }) => {
+        const result = await playlistManagementAPI.deletePlaylist(playlistId);
 
-        const result = await playlistApi.deletePlaylist(playlistId);
-        expect(result).toEqual([]);
+        expect(result.status()).toBe(200);
+        const body = await result.json();
+        expect(body).toEqual([]);
     });
 });
