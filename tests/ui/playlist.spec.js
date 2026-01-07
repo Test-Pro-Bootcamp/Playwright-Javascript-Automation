@@ -1,7 +1,7 @@
 // @ts-check
 import { test } from '@playwright/test';
-import { LoginPage } from "../pages/LoginPage";
-import { MainPage } from "../pages/MainPage";
+import { LoginPage } from "./../../pages/LoginPage";
+import { MainPage } from "./../../pages/MainPage";
 
 test.describe(`Playlist tests`, () => {
 

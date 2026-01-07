@@ -1,6 +1,6 @@
 // @ts-check
 import { test } from '@playwright/test';
-import { LoginPage } from "../pages/LoginPage";
+import { LoginPage } from "./../../pages/LoginPage";
 
 test.describe(`Login tests`, () => {
 
