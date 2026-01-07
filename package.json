@@ -1,18 +1,22 @@
 {
-  "name": "testproautotest",
-  "dependencies": {
-    "crypto-js": "^4.2.0",
-    "dotenv": "^16.4.5",
-    "fs": "^0.0.1-security",
-    "glob": "^10.4.1",
-    "playwright": "^1.57.0"
+  "name": "playwright-javascript-automation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Test-Pro-Bootcamp/Playwright-Javascript-Automation.git"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Test-Pro-Bootcamp/Playwright-Javascript-Automation/issues"
+  },
+  "homepage": "https://github.com/Test-Pro-Bootcamp/Playwright-Javascript-Automation#readme",
+  "description": "",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@types/node": "^20.12.12",
-    "allure-commandline": "^2.24.0",
-    "allure-playwright": "^2.13.0",
-    "typescript": "^5.4.5"
-  },
-  "scripts": {}
+    "@types/node": "^25.0.3"
+  }
 }
