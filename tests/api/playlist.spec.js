@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { PlaylistManagementAPI } from "../../api/PlaylistManagementAPI";
 import { AuthenticationAPI } from "../../api/AuthenticationAPI";
 
-test.describe('Playlist management API', () => {
+test.describe('Playlist management API @api', () => {
 
     let playlistManagementAPI;
     let playlistId;
@@ -18,10 +18,10 @@ test.describe('Playlist management API', () => {
 
     test('Create a new playlist', async ({ }) => {
         const playlistName = `Playlist ${Date.now()}`;
-        const playlist = await playlistManagementAPI.createPlaylist(playlistName);
+        const response = await playlistManagementAPI.createPlaylist(playlistName);
 
-        expect(playlist.status()).toBe(200);
-        const body = await playlist.json();
+        expect(response.status()).toBe(200);
+        const body = await response.json();
 
         expect(body).toHaveProperty('id');
         expect(typeof body.id).toBe('number');
@@ -35,18 +35,18 @@ test.describe('Playlist management API', () => {
     });
 
     test('Replace a playlist\'s content', async ({ }) => {
-        const result = await playlistManagementAPI.syncPlaylist(playlistId, ['06cd19b77127f1e7f889ecad54376b30']);
+        const response = await playlistManagementAPI.syncPlaylist(playlistId, ['06cd19b77127f1e7f889ecad54376b30']);
 
-        expect(result.status()).toBe(200);
-        const body = await result.json();
+        expect(response.status()).toBe(200);
+        const body = await response.json();
         expect(body).toEqual([]);
     });
 
     test('Delete a playlist', async ({ }) => {
-        const result = await playlistManagementAPI.deletePlaylist(playlistId);
+        const response = await playlistManagementAPI.deletePlaylist(playlistId);
 
-        expect(result.status()).toBe(200);
-        const body = await result.json();
+        expect(response.status()).toBe(200);
+        const body = await response.json();
         expect(body).toEqual([]);
     });
 });

@@ -1,7 +1,8 @@
 // @ts-check
 import { test } from '@playwright/test';
-import { LoginPage } from "./../../pages/LoginPage";
-import { MainPage } from "./../../pages/MainPage";
+import { LoginPage } from "../../pages/LoginPage";
+import { HomePage } from "../../pages/HomePage";
+import { AllSongsPage } from "../../pages/AllSongsPage";
 
 test.describe(`Playlist tests`, () => {
 
@@ -9,37 +10,43 @@ test.describe(`Playlist tests`, () => {
 
     test.beforeEach(async ({page}) => {
         await page.goto('https://qa.koel.app/')
+
+        const loginPage = new LoginPage(page);
+        await loginPage.logIn("oleg@testpro.io", "R4Swbxexv$yqQ9W")
     });
 
-    test('Create Playlist @regress', async ({page}) => {
-        const loginPage = new LoginPage(page);
-        const mainPage = new MainPage(page);
+    test('Create Playlist', async ({page}) => {
+        const homePage = new HomePage(page);
 
-        await loginPage.logIn("oleg@testpro.io", "R4Swbxexv$yqQ9W")
+        await homePage.clickCreatePlaylistButton()
 
-        await page.waitForLoadState('networkidle');
-        await mainPage.clickCreatePlaylistButton()
+        await homePage.selectCreateNewPlaylist()
 
-        await mainPage.selectCreateNewPlaylist()
+        await homePage.enterPlayListName(playlistName)
 
-        await mainPage.enterPlayListName(playlistName)
-
-        await mainPage.expectPlaylistExists(playlistName)
+        await homePage.expectPlaylistExists(playlistName)
     });
 
-    test('Add song to Playlist @regress', async ({page}) => {
-        const loginPage = new LoginPage(page);
-        const mainPage = new MainPage(page);
+    test('Add song to Playlist', async ({page}) => {
+        const homePage = new HomePage(page);
+        const allSongsPage = new AllSongsPage(page);
 
-        await loginPage.logIn("oleg@testpro.io", "R4Swbxexv$yqQ9W")
+        await homePage.clickAllSongs();
 
-        await page.waitForLoadState('networkidle');
-        await mainPage.clickSongs();
+        await allSongsPage.addFirstSongToPlaylist()
 
-        await mainPage.addSongToPlaylist()
-
-        await mainPage.expectSuccessToast(
+        await allSongsPage.expectSuccessToast(
             `Added 1 song into "${playlistName}."`
         );
+    });
+
+    test('Delete a playlist', async ({page}) => {
+        const homePage = new HomePage(page);
+
+        await homePage.rightClickPlaylist(playlistName);
+        await homePage.clickDeletePlaylist(playlistName);
+        await homePage.expectSuccessDelete(
+            `Deleted playlist "${playlistName}."`
+        )
     });
 });

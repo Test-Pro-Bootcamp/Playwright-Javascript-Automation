@@ -6,7 +6,7 @@ export class AuthenticationAPI {//переименовать в автариза
     }
 
     async login(email, password) {
-        const response = await this.request.post(`${this.baseUrl}/me`, {
+        return await this.request.post(`${this.baseUrl}/me`, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -16,7 +16,5 @@ export class AuthenticationAPI {//переименовать в автариза
                 password,
             },
         });
-
-        return response;
     }
 }

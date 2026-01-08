@@ -1,16 +1,16 @@
 import {expect} from "@playwright/test";
 
-export class MainPage {
+export class HomePage {
 
     constructor(page) {
         this.page = page;
         this.createPlaylistDropDown = page.locator("[data-testid='sidebar-create-playlist-btn']");
         this.createNewPlaylist = page.locator("[data-testid='playlist-context-menu-create-simple']");
         this.nameInputPlayList = page.locator("[placeholder='↵ to save']");
-        this.songs = page.locator("[href='#!/songs']");
-        this.firstTrack = page.locator("[class='song-item']").first();
+        this.allSongs = page.locator("[href='#!/songs']");
         this.playlist = page.locator("[class='playlist playlist']");
-        this.successNotification = page.locator('.alertify-logs .success');
+        this.deletePlaylistButton = page.getByTestId(/^playlist-context-menu-delete/)
+        this.successNotificationDelete = page.locator('.alertify-logs .success');
     }
 
     async clickCreatePlaylistButton() {
@@ -30,13 +30,16 @@ export class MainPage {
         await this.nameInputPlayList.press('Enter');
     }
 
-    async clickSongs(){
-        await this.songs.click();
+    async clickAllSongs(){
+        await this.allSongs.click();
     }
 
-    async addSongToPlaylist(){
+    async clickDeletePlaylist(){
+        await this.deletePlaylistButton.click();
+    }
 
-        await this.firstTrack.dragTo(this.playlist);
+    async rightClickPlaylist(){
+        await this.playlist.click({button: 'right'});
     }
 
     playlistByName(name) {
@@ -51,8 +54,8 @@ export class MainPage {
         await expect(playlist).toBeVisible();
     }
 
-    async expectSuccessToast(text) {
-        await expect(this.successNotification).toBeVisible();
-        await expect(this.successNotification).toHaveText(text);
+    async expectSuccessDelete(text) {
+        await expect(this.successNotificationDelete).toBeVisible();
+        await expect(this.successNotificationDelete).toHaveText(text);
     }
 }
