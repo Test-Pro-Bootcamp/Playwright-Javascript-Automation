@@ -1,4 +1,3 @@
-  
 import { test } from '@playwright/test';
 
 test.describe('User authentication', () => {
@@ -7,31 +6,25 @@ test.describe('User authentication', () => {
     await page.goto('/');
   });
 
-  test('login with valid credentials', async ({ page }) => {
-
-    await page.getByPlaceholder('Email Address')
-      .fill('YOUR_EMAIL_HERE');
-
-    await page.getByPlaceholder('Password')
-      .fill('YOUR_PASSWORD_HERE');
-
+  test('User logs in', async ({ page }) => {
+    await page.getByRole('textbox', { name: 'Email Address' }).fill('YOUR_EMAIL_HERE');
+    await page.getByRole('textbox', { name: 'Password' }).fill('YOUR_PASSWORD_HERE');
     await page.getByRole('button', { name: 'Log In' }).click();
 
-    await page.waitForTimeout(5000);
+    // Wait for navigation
+    await expect(page).toHaveURL(/#!\/home/);
+
+    // Wait for user-visible confirmation
+    await expect(page.getByText("Your Music")).toBeVisible();
   });
 
-  test('login with invalid password', async ({ page }) => {
-
-    await page.locator('input[type="email"]')
-      .fill('YOUR_EMAIL_HERE');
-
-    await page.locator('input[type="password"]')
-      .fill('WRONG_PASSWORD');
-
+  test('User is trying to log in with invalid credentials ', async ({ page }) => {
+    await page.getByRole('textbox', { name: 'Email Address' }).fill('YOUR_EMAIL_HERE');
+    await page.getByRole('textbox', { name: 'Password' }).fill('INVALID_PASSWORD');
+    await page.getByRole('button', { name: 'Log In' }).click();
     await page.locator('button[type="submit"]').click();
 
-    await page.waitForTimeout(5000);
+    // Verify user is NOT logged in
+    await expect(page.getByText('Your Music')).not.toBeVisible();
   });
-
 });
-  
