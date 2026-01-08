@@ -1,5 +1,5 @@
-  
-import { test, expect} from '@playwright/test';
+
+import { test, expect } from '@playwright/test';
 
 test.describe('User authentication', () => {
 
@@ -7,34 +7,36 @@ test.describe('User authentication', () => {
     await page.goto('/');
   });
 
-  test('login with valid credentials', async ({ page }) => {
+  test('User logs in', async ({ page }) => {
+    await page
+      .getByRole('textbox', { name: 'Email Address' })
+      .fill(process.env.EMAIL);
 
-    await page.getByPlaceholder('Email Address')
-      .fill('YOUR_EMAIL_HERE');
+    await page
+      .getByRole('textbox', { name: 'Password' })
+      .fill(process.env.PASSWORD);
 
-    await page.getByPlaceholder('Password')
-      .fill('YOUR_PASSWORD_HERE');
+    await page
+      .getByRole('button', { name: 'Log In' })
+      .click();
 
-    await page.getByRole('button', { name: 'Log In' }).click();
-
-   // Wait for navigation
     await expect(page).toHaveURL(/#!\/home/);
-
-    // Wait for user-visible confirmation
-    await expect(page.getByText("Your Music")).toBeVisible();
+    await expect(page.getByText('Your Music')).toBeVisible();
   });
 
-  test('login with invalid password', async ({ page }) => {
+  test('User is trying to log in with invalid credentials', async ({ page }) => {
+    await page
+      .getByRole('textbox', { name: 'Email Address' })
+      .fill(process.env.EMAIL);
 
-    await page.locator('input[type="email"]')
-      .fill('YOUR_EMAIL_HERE');
+    await page
+      .getByRole('textbox', { name: 'Password' })
+      .fill('INVALID_PASSWORD');
 
-    await page.locator('input[type="password"]')
-      .fill('WRONG_PASSWORD');
+    await page
+      .getByRole('button', { name: 'Log In' })
+      .click();
 
-    await page.locator('button[type="submit"]').click();
-
-    // Verify user is NOT logged in
     await expect(page.getByText('Your Music')).not.toBeVisible();
   });
 });

@@ -1,4 +1,5 @@
 // @ts-check
+import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
@@ -12,7 +13,6 @@ export default defineConfig({
 
   use: {
     baseURL: 'https://qa.koel.app',
-    headless: false,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'on-first-retry',
