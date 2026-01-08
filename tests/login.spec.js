@@ -1,5 +1,20 @@
-  
-import { test } from '@playwright/test';
+
+import { test, expect } from '@playwright/test';
+
+const loginTestData = [
+  {
+    title: 'valid credentials',
+    email: 'YOUR_EMAIL_HERE',
+    password: 'YOUR_PASSWORD_HERE',
+    shouldLogin: true,
+  },
+  {
+    title: 'invalid credentials',
+    email: 'YOUR_EMAIL_HERE',
+    password: 'INVALID_PASSWORD',
+    shouldLogin: false,
+  },
+];  
 
 test.describe('User authentication', () => {
 
@@ -7,31 +22,27 @@ test.describe('User authentication', () => {
     await page.goto('/');
   });
 
-  test('login with valid credentials', async ({ page }) => {
+  for (const data of loginTestData) {
 
-    await page.getByPlaceholder('Email Address')
-      .fill('YOUR_EMAIL_HERE');
+    test(`User logs in with ${data.title}`, async ({ page }) => {
+      await page
+        .getByRole('textbox', { name: 'Email Address' })
+        .fill(data.email);
 
-    await page.getByPlaceholder('Password')
-      .fill('YOUR_PASSWORD_HERE');
+      await page
+        .getByRole('textbox', { name: 'Password' })
+        .fill(data.password);
 
-    await page.getByRole('button', { name: 'Log In' }).click();
+      await page
+        .getByRole('button', { name: 'Log In' })
+        .click();
 
-    await page.waitForTimeout(5000);
-  });
-
-  test('login with invalid password', async ({ page }) => {
-
-    await page.locator('input[type="email"]')
-      .fill('YOUR_EMAIL_HERE');
-
-    await page.locator('input[type="password"]')
-      .fill('WRONG_PASSWORD');
-
-    await page.locator('button[type="submit"]').click();
-
-    await page.waitForTimeout(5000);
-  });
-
+      if (data.shouldLogin) {
+        await expect(page).toHaveURL(/#!\/home/);
+        await expect(page.getByText('Your Music')).toBeVisible();
+      } else {
+        await expect(page.getByText('Your Music')).not.toBeVisible();
+      }
+    });
+  }
 });
-  
