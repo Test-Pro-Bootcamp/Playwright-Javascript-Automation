@@ -10,10 +10,10 @@ test.describe('User authentication', () => {
   test('login with valid credentials', async ({ page }) => {
 
     await page.getByPlaceholder('Email Address')
-      .fill('YOUR_EMAIL_HERE');
+      .fill(process.env.EMAIL);
 
     await page.getByPlaceholder('Password')
-      .fill('YOUR_PASSWORD_HERE');
+      .fill(process.env.PASSWORD);
 
     await page.getByRole('button', { name: 'Log In' }).click();
 
@@ -27,7 +27,7 @@ test.describe('User authentication', () => {
   test('login with invalid password', async ({ page }) => {
 
     await page.locator('input[type="email"]')
-      .fill('YOUR_EMAIL_HERE');
+      .fill(process.env.EMAIL);
 
     await page.locator('input[type="password"]')
       .fill('WRONG_PASSWORD');
