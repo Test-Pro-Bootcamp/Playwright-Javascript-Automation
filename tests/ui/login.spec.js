@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
-import LoginPage from '../pages/LoginPage';
-import HomePage from '../pages/HomePage';
+import LoginPage from '../../pages/LoginPage';
+import HomePage from '../../pages/HomePage';
 
 test.describe('User authentication', () => {
   let loginPage;

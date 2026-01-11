@@ -1,8 +1,8 @@
 
 import { test } from '@playwright/test';
-import LoginPage from '../pages/LoginPage';
-import HomePage from '../pages/HomePage';
-import AllSongsPage from '../pages/AllSongsPage';
+import LoginPage from '../../pages/LoginPage';
+import HomePage from '../../pages/HomePage';
+import AllSongsPage from '../../pages/AllSongsPage';
 
 function generatePlaylistName() {
   return 'My Playlist ' + Date.now();
