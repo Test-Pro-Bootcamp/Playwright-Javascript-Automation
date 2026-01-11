@@ -1,40 +1,29 @@
-  
-import { test, expect} from '@playwright/test';
+import { test } from '@playwright/test';
+import LoginPage from '../pages/LoginPage';
+import HomePage from '../pages/HomePage';
 
 test.describe('User authentication', () => {
-
+  let loginPage;
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    loginPage = new LoginPage(page);
+    await loginPage.open();
   });
 
-  test('login with valid credentials', async ({ page }) => {
+  test('login with valid credentials', { tag: '@smoke' },  async ({ page }) => {
+    await loginPage.login(process.env.EMAIL, process.env.PASSWORD);
 
-    await page.getByPlaceholder('Email Address')
-      .fill(process.env.EMAIL);
+    const homePage = new HomePage(page);
 
-    await page.getByPlaceholder('Password')
-      .fill(process.env.PASSWORD);
-
-    await page.getByRole('button', { name: 'Log In' }).click();
-
-   // Wait for navigation
-    await expect(page).toHaveURL(/#!\/home/);
-
-    // Wait for user-visible confirmation
-    await expect(page.getByText("Your Music")).toBeVisible();
+    // Validate that home page is opened
+    await homePage.expectHomePageIsOpened();
   });
 
-  test('login with invalid password', async ({ page }) => {
+  test('login with invalid password', { tag: '@regression' }, async ({ page }) => {
+    await loginPage.login(process.env.EMAIL, 'WRONG_PASSWORD');
 
-    await page.locator('input[type="email"]')
-      .fill(process.env.EMAIL);
+    const homePage = new HomePage(page);
 
-    await page.locator('input[type="password"]')
-      .fill('WRONG_PASSWORD');
-
-    await page.locator('button[type="submit"]').click();
-
-    // Verify user is NOT logged in
-    await expect(page.getByText('Your Music')).not.toBeVisible();
+    // Validate that home page is not opened
+    await homePage.expectHomePageIsNotOpened();
   });
 });
