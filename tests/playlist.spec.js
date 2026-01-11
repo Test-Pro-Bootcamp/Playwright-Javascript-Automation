@@ -1,54 +1,53 @@
-import { test, expect } from '@playwright/test';
 
-test.describe('Playlist management', () => {
+import { test } from '@playwright/test';
+import LoginPage from '../pages/LoginPage';
+import HomePage from '../pages/HomePage';
+import AllSongsPage from '../pages/AllSongsPage';
 
+function generatePlaylistName() {
+  return 'My Playlist ' + Date.now();
+}
+
+test.describe('Playlist management', { tag: '@smoke' }, () => {
+
+  let playlistName;
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-
-    await page.getByPlaceholder('Email Address')
-      .fill(process.env.EMAIL);
-
-    await page.getByPlaceholder('Password')
-      .fill(process.env.PASSWORD);
-
-    await page.getByRole('button', { name: 'Log In' }).click();
-
-    await expect(page).toHaveURL(/#!\/home/);
-    await expect(page.getByText('Your Music')).toBeVisible();
+    const loginPage = new LoginPage(page);
+    
+    playlistName = generatePlaylistName();
+    await loginPage.open();
+    await loginPage.login(process.env.EMAIL, process.env.PASSWORD);
   });
 
-  test('drag and drop song into playlist', async ({ page }) => {
+  test('Create Playlist', async ({ page }) => {
+    const homePage = new HomePage(page);
 
-    // create playlist
-    await page.getByTestId('sidebar-create-playlist-btn').click();
-    await page.getByTestId('playlist-context-menu-create-simple').click();
+    await homePage.clickCreatePlaylistButton();
+    await homePage.selectCreateNewPlaylist();
+    await homePage.enterPlayListName(playlistName);
+    await homePage.expectPlaylistExists(playlistName);
+  });
 
-    const playlistName = `My Playlist ${Date.now()}`;
-    await page.getByPlaceholder('↵ to save').fill(playlistName);
-    await page.keyboard.press('Enter');
+  test('Add song to Playlist', async ({ page }) => {
+    const homePage = new HomePage(page);
+    const allSongsPage = new AllSongsPage(page);
 
-    // go to All Songs
-    await page.getByRole('link', { name: 'All Songs' }).click();
+    await homePage.createPlaylist(playlistName);
+    await homePage.clickAllSongs();
+    await allSongsPage.addFirstSongToPlaylist(playlistName);
+    await allSongsPage.expectSuccessToast(
+      `Added 1 song into "${playlistName}."`
+    );
+  });
 
-    const songsWrapper = page.locator('#songsWrapper');
-    const song = songsWrapper.locator('.song-item').first();
+  test('Delete a playlist', async ({ page }) => {
+    const homePage = new HomePage(page);
 
-    const songTitle = await song.locator('.title').innerText();
-
-    const playlistLink = page.locator('#playlists li.playlist a', { hasText: playlistName });
-
-    // drag song into playlist
-    await song.dragTo(playlistLink);
-
-    // optional: verify toast message
-    await expect(page.getByText(`Added 1 song into "${playlistName}."`)).toBeVisible();
-
-    // open playlist
-    await playlistLink.click();
-
-    // verify song is present in playlist
-    const playlistWrapper = page.locator('#playlistWrapper');
-
-    await expect(playlistWrapper.locator('.song-item .title', { hasText: songTitle})).toBeVisible();
+    await homePage.createPlaylist(playlistName);
+    await homePage.rightClickPlaylist(playlistName);
+    await homePage.clickDeletePlaylist(playlistName);
+    await homePage.expectSuccessDelete(
+      `Deleted playlist "${playlistName}."`
+    );
   });
 });
