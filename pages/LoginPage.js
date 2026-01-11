@@ -13,7 +13,7 @@ export default class LoginPage extends BasePage {
   };
 
   async open() {
-    await this.goto(this.url);
+    await this.page.goto(LoginPage.url);
   };
 
   async login(email, password) {

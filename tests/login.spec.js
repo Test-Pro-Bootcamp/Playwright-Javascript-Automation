@@ -3,23 +3,25 @@ import LoginPage from '../pages/LoginPage';
 import HomePage from '../pages/HomePage';
 
 test.describe('User authentication', () => {
+  let loginPage;
   test.beforeEach(async ({ page }) => {
-    await page.goto(LoginPage.url)
+    loginPage = new LoginPage(page);
+    await loginPage.open();
   });
 
   test('login with valid credentials', { tag: '@smoke' },  async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const homePage = new HomePage(page);
     await loginPage.login(process.env.EMAIL, process.env.PASSWORD);
+
+    const homePage = new HomePage(page);
 
     // Validate that home page is opened
     await homePage.expectHomePageIsOpened();
   });
 
   test('login with invalid password', { tag: '@regression' }, async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const homePage = new HomePage(page);
     await loginPage.login(process.env.EMAIL, 'WRONG_PASSWORD');
+
+    const homePage = new HomePage(page);
 
     // Validate that home page is not opened
     await homePage.expectHomePageIsNotOpened();
