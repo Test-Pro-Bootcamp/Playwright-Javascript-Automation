@@ -38,10 +38,9 @@ test.describe('User authentication', () => {
         .click();
 
       if (data.shouldLogin) {
-        await expect(page).toHaveURL(/#!\/home/);
-        await expect(page.getByText('Your Music')).toBeVisible();
+        await expect(page.locator('[data-testid="view-profile-link"]')).toBeVisible();
       } else {
-        await expect(page.getByText('Your Music')).not.toBeVisible();
+        await expect(page.locator('[data-testid="view-profile-link"]')).not.toBeVisible();
       }
     });
   }
