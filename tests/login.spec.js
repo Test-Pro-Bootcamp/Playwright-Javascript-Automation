@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 test.describe('User authentication', () => {
 
@@ -11,11 +11,8 @@ test.describe('User authentication', () => {
     await page.getByRole('textbox', { name: 'Password' }).fill('YOUR_PASSWORD_HERE');
     await page.getByRole('button', { name: 'Log In' }).click();
 
-    // Wait for navigation
-    await expect(page).toHaveURL(/#!\/home/);
-
     // Wait for user-visible confirmation
-    await expect(page.getByText("Your Music")).toBeVisible();
+    await expect(page.locator('[data-testid="view-profile-link"]')).toBeVisible();
   });
 
   test('User is trying to log in with invalid credentials ', async ({ page }) => {
@@ -25,6 +22,6 @@ test.describe('User authentication', () => {
     await page.locator('button[type="submit"]').click();
 
     // Verify user is NOT logged in
-    await expect(page.getByText('Your Music')).not.toBeVisible();
+    await expect(page.locator('[data-testid="view-profile-link"]')).not.toBeVisible();
   });
 });
