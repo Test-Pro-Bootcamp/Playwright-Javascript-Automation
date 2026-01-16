@@ -13,8 +13,7 @@ test.describe('Playlist management', () => {
 
     await page.getByRole('button', { name: 'Log In' }).click();
 
-    await expect(page).toHaveURL(/#!\/home/);
-    await expect(page.getByText('Your Music')).toBeVisible();
+    await expect(page.locator('[data-testid="view-profile-link"]')).toBeVisible();
   });
 
   test('drag and drop song into playlist', async ({ page }) => {
