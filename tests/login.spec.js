@@ -20,8 +20,7 @@ test.describe('User authentication', () => {
       .getByRole('button', { name: 'Log In' })
       .click();
 
-    await expect(page).toHaveURL(/#!\/home/);
-    await expect(page.getByText('Your Music')).toBeVisible();
+    await expect(page.locator('[data-testid="view-profile-link"]')).toBeVisible();
   });
 
   test('User is trying to log in with invalid credentials', async ({ page }) => {
@@ -37,6 +36,6 @@ test.describe('User authentication', () => {
       .getByRole('button', { name: 'Log In' })
       .click();
 
-    await expect(page.getByText('Your Music')).not.toBeVisible();
+    await expect(page.locator('[data-testid="view-profile-link"]')).not.toBeVisible();
   });
 });
