@@ -1,4 +1,5 @@
 import BasePage from "./BasePage";
+import { expect } from '@playwright/test';
 
 export default class LoginPage extends BasePage {
   constructor(page) {
@@ -21,4 +22,9 @@ export default class LoginPage extends BasePage {
     await this.passwordInput.fill(password);
     await this.loginButton.click();
   };
+
+  async expectLoginFormError() {
+    await expect(this.page.locator(
+      'form[data-testid="login-form"]')).toHaveClass('error');
+  };    
 };
