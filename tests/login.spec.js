@@ -40,7 +40,8 @@ test.describe('User authentication', () => {
       if (data.shouldLogin) {
         await expect(page.locator('[data-testid="view-profile-link"]')).toBeVisible();
       } else {
-        await expect(page.locator('[data-testid="view-profile-link"]')).not.toBeVisible();
+        // Verify the login for got an error
+        await expect(page.locator('form[data-testid="login-form"]')).toHaveClass('error');
       }
     });
   }
