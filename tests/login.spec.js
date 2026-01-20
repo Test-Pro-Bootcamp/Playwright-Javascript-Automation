@@ -20,8 +20,8 @@ test.describe('User authentication', () => {
     await page.getByRole('textbox', { name: 'Password' }).fill('INVALID_PASSWORD');
     await page.getByRole('button', { name: 'Log In' }).click();
     await page.locator('button[type="submit"]').click();
-
-    // Verify user is NOT logged in
-    await expect(page.locator('[data-testid="view-profile-link"]')).not.toBeVisible();
+    
+    // Verify the login for got an error
+    await expect(page.locator('form[data-testid="login-form"]')).toHaveClass('error');
   });
 });
