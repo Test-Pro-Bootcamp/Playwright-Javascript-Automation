@@ -34,7 +34,7 @@ test.describe('User authentication', () => {
 
     await page.locator('button[type="submit"]').click();
 
-    // Verify user is NOT logged in
-    await expect(page.getByText('Your Music')).not.toBeVisible();
+    // Verify the login for got an error
+    await expect(page.locator('form[data-testid="login-form"]')).toHaveClass('error');
   });
 });
