@@ -20,10 +20,8 @@ test.describe('User authentication', () => {
 
   test('login with invalid password', { tag: '@regression' }, async ({ page }) => {
     await loginPage.login(process.env.EMAIL, 'WRONG_PASSWORD');
-
-    const homePage = new HomePage(page);
-
-    // Validate that home page is not opened
-    await homePage.expectHomePageIsNotOpened();
+    
+    // Verify the login for got an error
+    await loginPage.expectLoginFormError()
   });
 });
