@@ -21,8 +21,8 @@ export default class AllSongsPage extends BasePage {
   }
 
   async addFirstSongToPlaylist(playlistName) {
-    const song = this.getFirstSong();
-    const playlist = this.page.locator('#playlists li.playlist a', { hasText: playlistName });
+    const song = await this.getFirstSong();
+    const playlist = await this.page.locator('#playlists li.playlist a', { hasText: playlistName });
     await song.dragTo(playlist);
   }
 
