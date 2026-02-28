@@ -11,10 +11,11 @@ function generatePlaylistName() {
 test.describe('Playlist management', { tag: '@smoke' }, () => {
 
   let playlistName;
+
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
-    
     playlistName = generatePlaylistName();
+
     await loginPage.open();
     await loginPage.login(process.env.EMAIL, process.env.PASSWORD);
   });
@@ -22,9 +23,7 @@ test.describe('Playlist management', { tag: '@smoke' }, () => {
   test('Create Playlist', async ({ page }) => {
     const homePage = new HomePage(page);
 
-    await homePage.clickCreatePlaylistButton();
-    await homePage.selectCreateNewPlaylist();
-    await homePage.enterPlayListName(playlistName);
+    await homePage.createPlaylist(playlistName);
     await homePage.expectPlaylistExists(playlistName);
   });
 
@@ -35,6 +34,7 @@ test.describe('Playlist management', { tag: '@smoke' }, () => {
     await homePage.createPlaylist(playlistName);
     await homePage.clickAllSongs();
     await allSongsPage.addFirstSongToPlaylist(playlistName);
+
     await allSongsPage.expectSuccessToast(
       `Added 1 song into "${playlistName}."`
     );
@@ -45,7 +45,8 @@ test.describe('Playlist management', { tag: '@smoke' }, () => {
 
     await homePage.createPlaylist(playlistName);
     await homePage.rightClickPlaylist(playlistName);
-    await homePage.clickDeletePlaylist(playlistName);
+    await homePage.clickDeletePlaylist();
+
     await homePage.expectSuccessDelete(
       `Deleted playlist "${playlistName}."`
     );
