@@ -6,10 +6,9 @@ export default class AllSongsPage extends BasePage {
   constructor(page) {
     super(page);
     this.songsWrapper = page.locator('#songsWrapper');
-    this.toast = page.locator('.toast');
   }
 
-  getFirstSong() {
+  async getFirstSong() {
     const song = this.songsWrapper.locator('.song-item').first();
     return song;
   }
@@ -22,7 +21,7 @@ export default class AllSongsPage extends BasePage {
 
   async addFirstSongToPlaylist(playlistName) {
     const song = await this.getFirstSong();
-    const playlist = await this.page.locator('#playlists li.playlist a', { hasText: playlistName });
+    const playlist = this.page.locator('#playlists li.playlist a', { hasText: playlistName });
     await song.dragTo(playlist);
   }
 
