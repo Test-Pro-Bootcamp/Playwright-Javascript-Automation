@@ -34,19 +34,28 @@ test.describe('Playlist management API @api', () => {
         playlistId = body.id;
     });
 
-    test('Replace a playlist\'s content', async ({ }) => {
-        const response = await playlistManagementAPI.syncPlaylist(playlistId, ['06cd19b77127f1e7f889ecad54376b30']);
+    test.describe('Operations on an existing playlist', () => {
+        test.beforeEach(async () => {
+            const name = `Playlist ${Date.now()}`;
+            const resp = await playlistManagementAPI.createPlaylist(name);
+            const body = await resp.json();
+            playlistId = body.id;
+        });
 
-        expect(response.status()).toBe(200);
-        const body = await response.json();
-        expect(body).toEqual([]);
-    });
+        test('Replace a playlist\'s content', async ({ }) => {
+            const response = await playlistManagementAPI.syncPlaylist(playlistId, ['06cd19b77127f1e7f889ecad54376b30']);
 
-    test('Delete a playlist', async ({ }) => {
-        const response = await playlistManagementAPI.deletePlaylist(playlistId);
+            expect(response.status()).toBe(200);
+            const body = await response.json();
+            expect(body).toEqual([]);
+        });
 
-        expect(response.status()).toBe(200);
-        const body = await response.json();
-        expect(body).toEqual([]);
+        test('Delete a playlist', async ({ }) => {
+            const response = await playlistManagementAPI.deletePlaylist(playlistId);
+
+            expect(response.status()).toBe(200);
+            const body = await response.json();
+            expect(body).toEqual([]);
+        });
     });
 });
